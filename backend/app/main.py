@@ -1,17 +1,13 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-from app.api.routes.prediction import (
-    router as prediction_router
-)
+from app.api.routes.prediction import router as prediction_router
 
 
 app = FastAPI(
     title="InsuraAI",
-    description=(
-        "AI-powered Health Insurance "
-        "Premium Prediction API"
-    ),
+    description="AI-powered Health Insurance Premium Prediction API",
     version="1.0.0"
 )
 
@@ -20,11 +16,16 @@ app = FastAPI(
 # CORS
 # ----------------------------------------
 
+FRONTEND_URL = os.getenv(
+    "FRONTEND_URL",
+    "http://localhost:5173"
+)
+
 app.add_middleware(
     CORSMiddleware,
 
     allow_origins=[
-        "http://localhost:5173"
+        FRONTEND_URL
     ],
 
     allow_credentials=True,
@@ -35,31 +36,4 @@ app.add_middleware(
 )
 
 
-# ----------------------------------------
-# ROUTES
-# ----------------------------------------
-
-app.include_router(
-    prediction_router
-)
-
-
-@app.get("/")
-def root():
-
-    return {
-        "application": "InsuraAI",
-        "status": "online",
-        "message": (
-            "Health Insurance "
-            "Premium Prediction API"
-        )
-    }
-
-
-@app.get("/health")
-def health_check():
-
-    return {
-        "status": "healthy"
-    }
+app.include_router(prediction_router)
