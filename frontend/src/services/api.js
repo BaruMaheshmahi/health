@@ -1,15 +1,14 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/v1",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL:
+    import.meta.env.VITE_API_URL ||
+    "https://health-insurance-premium-prediction-whj6.onrender.com",
 });
 
 export const predictPremium = async (data) => {
   const response = await api.post(
-    "/predict",
+    "/api/v1/predict",
     data
   );
 
